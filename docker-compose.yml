@@ -1,0 +1,45 @@
+version: "3.8"
+services:
+  app:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: demo_app
+    ports:
+      - "3000:3000" # host:container (change if your app uses a different port)
+    environment:
+      - NODE_ENV=development
+      - PORT=3000
+      # Pass Redis service host/port into the Spring Boot app so it can connect to the redis container
+      - REDIS_HOST=redis
+      - REDIS_PORT=6379
+    depends_on:
+      - redis
+
+  redis:
+    image: redis:7-alpine
+    container_name: demo_redis
+    ports:
+      - "6379:6379"
+    restart: unless-stopped
+
+# For dev live-reload: mount source and run a dev command (uncomment & adjust)
+# volumes:
+#   - ./:/app
+#   - /app/node_modules
+# command: npm run dev
+
+# Example DB service (postgres) - enable only if needed
+#  db:
+#    image: postgres:14-alpine
+#    environment:
+#      POSTGRES_USER: demo
+#      POSTGRES_PASSWORD: demo
+#      POSTGRES_DB: demo
+#    volumes:
+#      - db-data:/var/lib/postgresql/data
+#    ports:
+#      - "5432:5432"
+#
+#volumes:
+#  db-data:
