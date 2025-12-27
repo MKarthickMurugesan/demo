@@ -1,12 +1,14 @@
 package io.demo.controller;
 
 //import org.springframework.data.redis.core.RedisTemplate;
+
 import io.demo.entity.Student;
 import io.demo.repository.StudentRepo;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 @RestController
@@ -22,7 +24,8 @@ public class DemoController {
 //    }
 
     @GetMapping
-    public ResponseEntity<String> getDemoMessage() {
+    public ResponseEntity<String> getDemoMessage(@RequestParam(name = "name", required = false) String name,
+                                                 @RequestParam(name = "email", required = false) String email) {
         String s = null;
         try {
 //            redisTemplate.opsForValue().set("demoKey", "demoValue");
@@ -31,10 +34,12 @@ public class DemoController {
 //            s = redisTemplate.opsForValue().get("demoKey");
 
             Student student = new Student();
-            student.setName("John Doe");
-            student.setEmail("test@email.com");
+            student.setName(name);
+            student.setEmail(email);
 
-//            studentRepo.save(student);
+            System.out.println(student.toString());
+
+            studentRepo.save(student);
 
         } catch (Exception e) {
             throw new RuntimeException(e);
